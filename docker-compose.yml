@@ -3,7 +3,7 @@ services:
   price-watch:
     build: .
     ports:
-      - "8000:8000"
+      - "9200:8000"
     volumes:
       - watch_data:/app/data
     environment:
