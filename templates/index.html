@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Local Price Watch</title>
+    <style>
+        body { font-family: system-ui; max-width: 800px; margin: 2rem auto; padding: 0 1rem; background: #f5f7fa; }
+        .card { background: #fff; padding: 1rem; margin-bottom: 1rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        form { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+        input, select { padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; }
+        button { padding: 0.5rem 1rem; background: #0066cc; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0052a3; }
+        .delete { background: #cc0000; margin-left: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
+        th, td { padding: 0.5rem; border-bottom: 1px solid #eee; text-align: left; }
+        a { color: #0066cc; text-decoration: none; }
+        .empty { color: #888; font-style: italic; }
+    </style>
+</head>
+<body>
+    <h2>🔍 Local Price Watch</h2>
+    <form method="post" action="/add">
+        <input type="text" name="query" placeholder="Search term (e.g. iPhone 13)" required>
+        <select name="site">
+            <option value="amazon">Amazon</option>
+            <option value="ebay">eBay</option>
+            <option value="swappa">Swappa</option>
+        </select>
+        <button type="submit">Watch</button>
+    </form>
+
+    {% if items %}
+    <div class="card">
+        {% for item in items %}
+        <div style="margin-bottom: 1rem;">
+            <strong>{{ item.query }}</strong> ({{ item.site }}) 
+            <a href="/results/{{ item.id }}">View Results</a> | 
+            <form method="post" action="/delete/{{ item.id }}" style="display:inline; margin-left:0.5rem;">
+                <button type="submit" class="delete">Delete</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if active_results %}
+    <div class="card">
+        <h3>Recent Results</h3>
+        <table>
+            <tr><th>Title</th><th>Price</th><th>Link</th><th>Scraped</th></tr>
+            {% for r in active_results %}
+            <tr>
+                <td>{{ r.title }}</td>
+                <td>{{ r.price }}</td>
+                <td><a href="{{ r.url }}" target="_blank">Open</a></td>
+                <td>{{ r.scraped_at }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% elif items %}
+    <div class="card"><p class="empty">Click a watch item to see results.</p></div>
+    {% endif %}
+</body>
+</html>
