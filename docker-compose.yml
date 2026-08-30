@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+  price-watch:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - watch_data:/app/data
+    environment:
+      - SCRAPE_INTERVAL_MINUTES=10
+      - MAX_RETRIES=2
+      - REQUEST_DELAY_SECONDS=2
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true" # Optional: auto-update
+volumes:
+  watch_data:
+    driver: local
