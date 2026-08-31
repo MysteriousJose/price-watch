@@ -8,20 +8,23 @@
 <body>
     <h2>📦 Results for Item #{{ item_id }}</h2>
     
-    {% if listings %}
-        <div class="results-grid">
-            {% for listing in listings %}
-            <div class="listing-card">
-                <p><strong>Price:</strong> ${{ listing.price }}</p>
-                <p><strong>Condition:</strong> {{ listing.condition }}</p>
-                <p><strong>Source:</strong> {{ listing.source }}</p>
-                <p><strong>Scraped:</strong> {{ listing.updated_at }}</p>
-            </div>
-            {% endfor %}
+    {% if has_data %}
+    <div class="results-grid">
+        {% for row in results %}
+        <div class="result-card">
+            <p><strong>Price:</strong> ${{ row.price or 'N/A' }}</p>
+            <p><strong>Condition:</strong> {{ row.condition or 'N/A' }}</p>
+            <p><strong>Source:</strong> {{ row.source or 'N/A' }}</p>
+            <p><strong>URL:</strong> <a href="{{ row.url }}" target="_blank">Link</a></p>
+            <p><strong>Scraped:</strong> {{ row.scraped_at or 'Unknown' }}</p>
         </div>
-    {% else %}
-        <p>No results found for this item yet. Scrape in progress...</p>
-    {% endif %}
+        {% endfor %}
+    </div>
+{% else %}
+    <p>⏳ No results yet. Trigger a scan or wait for the scheduler.</p>
+    <a href="/?trigger_scan=1" onclick="window.location.href='/trigger-scan/{{ item_id }}'">🔄 Manually Trigger Scan</a>
+{% endif %}
+
 
     <a href="/" class="back-link">← Back to Dashboard</a>
 </body>
