@@ -1,4 +1,4 @@
-import time
+import asyncio
 import random
 import httpx
 from bs4 import BeautifulSoup
@@ -26,7 +26,7 @@ async def scrape_site(site: str, query: str, delay: float = 2.0) -> List[Dict[st
             resp = await client.get(url)
             resp.raise_for_status()
             soup = BeautifulSoup(resp.text, "lxml")
-            time.sleep(delay)  # Polite delay to avoid blocks
+            await asyncio.sleep(delay)  # FIXED: Non-blocking async delay
             return parse_results(soup, site)
         except httpx.HTTPError as e:
             print(f"[{site}] Request failed: {e}")
