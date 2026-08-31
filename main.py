@@ -32,10 +32,16 @@ async def run_scrape_all():
         await update_last_scraped(item["id"])
         print(f"Scraped: {item['query']} ({item['site']}) -> {len(results)} results")
 
-@app.get("/", response_class=HTMLResponse)
-async def index(request: Request):
-    items = await get_items()
-    return templates.TemplateResponse("index.html", {"request": request, "items": items})
+@app.get("/results/{item_id}", response_class=HTMLResponse)
+async def view_results(request: Request, item_id: int):
+    # Fetch listings from your DB
+    # listings = db.query(Listing).filter(Listing.item_id == item_id).all()
+    
+    return templates.TemplateResponse("results.html", {
+        "request": request,
+        "item_id": item_id,
+        "listings": []  # Replace with actual DB query
+    })
 
 @app.post("/add")
 async def add(request: Request, query: str = Form(...), site: str = Form(...)):
