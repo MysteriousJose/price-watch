@@ -20,12 +20,36 @@
         </div>
         {% endfor %}
     </div>
-{% else %}
+    <button onclick="manualScrape({{ item_id }})" style="margin: 10px 0; padding: 8px 12px; cursor: pointer;">🔄 Manually Trigger Scan</button>
+    {% else %}
     <p>⏳ No results yet. Trigger a scan or wait for the scheduler.</p>
-    <a href="/?trigger_scan=1" onclick="window.location.href='/trigger-scan/{{ item_id }}'">🔄 Manually Trigger Scan</a>
-{% endif %}
-
+    <button onclick="manualScrape({{ item_id }})" style="margin: 10px 0; padding: 8px 12px; cursor: pointer;">🔄 Manually Trigger Scan</button>
+    {% endif %}
 
     <a href="/" class="back-link">← Back to Dashboard</a>
+
+    <script>
+        async function manualScrape(id) {
+            const btn = event.target;
+            btn.disabled = true;
+            btn.textContent = '⏳ Scraping...';
+            try {
+                const res = await fetch(`/trigger-scan/${id}`, { method: 'POST' });
+                const data = await res.json();
+                if (res.ok) {
+                    alert(`✅ Scraped ${data.count} prices! Reloading...`);
+                    window.location.reload();
+                } else {
+                    alert(`❌ Error: ${data.detail || 'Unknown error'}`);
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Network error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '🔄 Manually Trigger Scan';
+            }
+        }
+    </script>
 </body>
 </html>
