@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Results - Item #{{ item_id }}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <h2>📦 Results for Item #{{ item_id }}</h2>
+    
+    {% if listings %}
+        <div class="results-grid">
+            {% for listing in listings %}
+            <div class="listing-card">
+                <p><strong>Price:</strong> ${{ listing.price }}</p>
+                <p><strong>Condition:</strong> {{ listing.condition }}</p>
+                <p><strong>Source:</strong> {{ listing.source }}</p>
+                <p><strong>Scraped:</strong> {{ listing.updated_at }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No results found for this item yet. Scrape in progress...</p>
+    {% endif %}
+
+    <a href="/" class="back-link">← Back to Dashboard</a>
+</body>
+</html>
